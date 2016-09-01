@@ -238,4 +238,15 @@ static int on_load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info)
     return 0;
 }
 
-ERL_NIF_INIT(bcrypt_nif, bcrypt_nif_funcs, &on_load, NULL, NULL, NULL)
+static int upgrade(ErlNifEnv* env, void** priv, void** old_priv, ERL_NIF_TERM info)
+{
+    return on_load(env, priv, info);
+}
+
+static void unload(ErlNifEnv* env, void* priv)
+{
+    enif_free(priv);
+    return;
+}
+
+ERL_NIF_INIT(bcrypt_nif, bcrypt_nif_funcs, &on_load, NULL, &upgrade, &unload)
